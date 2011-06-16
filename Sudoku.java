@@ -2,6 +2,7 @@ import java.util.Random;
 import java.io.*;
 public class Sudoku{
 	public int[][] board;
+	public int[][] puzzle;
 	public int[][] answer;
 	public Random random;
 	public int seed;
@@ -9,6 +10,7 @@ public class Sudoku{
 
 	public Sudoku(int seed){
 		board  = new int[9][9];
+		puzzle = new int[9][9];
 		answer = new int[9][9];
 		random = new Random();
 		setNewBoard(seed);
@@ -18,6 +20,7 @@ public class Sudoku{
 	}
 	public void setItem(int x, int y, int item){
 		board[x][y] = item;
+		System.out.println(item);
 	}
 	public int[][] getBoard(){
 		return board;
