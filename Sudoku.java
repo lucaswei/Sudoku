@@ -14,42 +14,75 @@ public class Sudoku{
 		answer = new int[9][9];
 		random = new Random();
 		setNewBoard(seed);
+		boardToPuzzle();
+	}
+	public void boardToPuzzle(){
+		for (int i=0; i<9; i++) {
+			for (int j=0; j<9; j++) {
+				 puzzle[i][j] = board[i][j];
+			}
+		}
 	}
 	public int getItem(int x, int y){
-		return board[x][y];
+		return puzzle[x][y];
 	}
 	public void setItem(int x, int y, int item){
-		board[x][y] = item;
-		System.out.println(item);
+		puzzle[x][y] = item;
 	}
 	public int[][] getBoard(){
 		return board;
 	}
+	public int[][] getPuzzle(){
+		return puzzle;
+	}
 	public void setNewBoard(int seed){
 		this.seed = seed;
 		random.setSeed(seed);
-		int[][] tempBoard = new int[9][9];
 		int[] row = new int[9];
-		int[] columnShift = new int[9];
-		int offset;
-
+		int[][] sample = new int[3][3];
+		int[][] temp;
 		randomArray(row);
-		randomArray(columnShift);
-
-		for (int i=0; i<row.length; i++) {
-			for (int j=0; j<row.length; j++) {
-				offset = j+columnShift[i];
-				if (offset >= 9) 
-					offset = offset - 9;
-				answer[i][j] = row[offset];
+		for (int i=0; i<3; i++) {
+			for (int j=0; j<3;j++) {
+				sample[i][j] = row[i*3+j];
 			}
 		}
+		for (int i=0; i<3; i++) {
+			for (int j=0; j<3; j++) {
+				temp = shift(sample, j, i);
+
+				for (int a=0; a<3;a++){
+					for (int b=0; b<3; b++) {
+						answer[i*3+a][j*3+b] = temp[a][b];
+					}
+				}
+			}
+		}
+
 		makePuzzle();
+	}
+	private int[][] shift(int[][] sample, int x, int y){
+		int[][] result = new int[3][3];
+		int a,b;
+		for (int i=0; i<3; i++) {
+			for (int j=0; j<3; j++) {
+				if((i+x)>=3)
+					a = i+x-3;
+				else
+					a =i+x;
+				if((j+y)>=3)
+					b = j+y-3;
+				else
+					b =j+y;
+				result[i][j] = sample[a][b];
+			}
+		}
+		return result;
 	}
 	public boolean isCorrect(){
 		for (int i=0; i<9; i++) {
 			for (int j=0; j<9; j++) {
-				if(board[i][j] == answer[i][j])
+				if(puzzle[i][j] == answer[i][j])
 					return false;
 			}
 		}
@@ -61,7 +94,7 @@ public class Sudoku{
 		output = output + Integer.toString(seed) +"\n";
 		for (int i=0; i<9; i++) {
 			for (int j=0; j<9; j++) {
-				output += Integer.toString(board[i][j]) + "-";
+				output += Integer.toString(puzzle[i][j]) + "-";
 			}
 			output += "\n";
 		}
@@ -83,13 +116,14 @@ public class Sudoku{
 			fileReader = new FileReader("output.txt");
 			buf = new BufferedReader(fileReader);
 			stringItems = buf.readLine();
-			setNewBoard(Integer.parseInt(stringItems));
-			for (int i=0; i<2; i++) {
+			seed = Integer.parseInt(stringItems);
+			setNewBoard(seed);
+			for (int i=0; i<9; i++) {
 				stringItems = buf.readLine();
 				items = stringItems.split("-");
 				for (int j=0; j<9; j++) {
 					if(items[j] != null) {
-						board[i][j] = Integer.parseInt( items[j] );
+						puzzle[i][j] = Integer.parseInt( items[j] );
 					}
 				}
 			}
@@ -114,10 +148,19 @@ public class Sudoku{
 			System.out.printf("\n");
 		}
 	}
+	public void printP(){
+		for (int i=0; i<9; i++)	{
+			for (int j=0; j<9; j++) {
+				System.out.printf("%d ",puzzle[i][j]);
+			}
+			System.out.printf("\n");
+		}
+	}
 	private void makePuzzle(){
+		random.setSeed(seed);
 		for (int i=0; i<9; i++) {
 			for (int j=0; j<9; j++) {
-				if(random.nextInt(6)==0)
+				if(random.nextInt(4)==0)
 					board[i][j] = answer[i][j];
 				else
 					board[i][j] = 0;

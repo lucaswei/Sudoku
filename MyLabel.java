@@ -34,12 +34,15 @@ public class MyLabel extends JLabel implements MouseListener, KeyListener{
 	public void setItem(int item){
 		if(item >0 && item <10 && !isFixed)
 			setText(Integer.toString(item));
+		if(item == 0)
+			setText("");
 	}
 	public void setFixed(boolean toggle){
-		setBackground(FIX);
 		isFixed = toggle;
-		removeMouseListener(this);
-		removeKeyListener(this);
+		if(isFixed)
+			setBackground(FIX);
+		else
+			setBackground(BACK);
 	}
 	public void onClick(){
 		if(!isFixed){

@@ -84,10 +84,63 @@ public class SudokuScreen extends JFrame{
 		for (int i=0; i<9; i++) {
 			for (int j=0; j<9; j++) {
 				item = board[i][j];
-				boardLabel[i][j].setItem(item);
+				setItem(i, j, item);
 				if(item != 0){
 					boardLabel[i][j].setFixed(true);
 				}
+			}
+		}
+	}
+	public void newBoard(){
+		sudoku.seed++;
+		sudoku.setNewBoard(sudoku.seed);
+		sudoku.boardToPuzzle();
+		for (int i=0; i<9; i++) {
+			for (int j=0; j<9; j++) {
+				boardLabel[i][j].setFixed(false);
+			}
+		}
+		buildItem();
+	}
+	public void isCorrect(){
+		JFrame jframe;
+		if(sudoku.isCorrect()){
+			jframe = new JFrame("resault");
+			jframe.setSize(200,100);
+			jframe.add(new JLabel("Congraturelations"));
+		}
+		else{
+			jframe = new JFrame("resault");
+			jframe.setSize(200,100);
+			jframe.add(new JLabel("You are Wrong"));
+		}
+		jframe.setVisible(true);
+	}
+	public void readFile(){
+		sudoku.readFile();
+		int[][] board;
+		int[][] puzzle;
+		int[][] temppuzzle;
+		puzzle = new int[9][9];
+		int item;
+		temppuzzle = sudoku.getPuzzle();
+		for (int i=0; i<9; i++) {
+			for (int j=0; j<9; j++)	{
+				puzzle[i][j] = temppuzzle[i][j];
+			}
+		}
+		board = sudoku.getBoard();
+		for (int i=0; i<9; i++) {
+			for (int j=0; j<9; j++) {
+				boardLabel[i][j].setFixed(false);
+			}
+		}
+		buildItem();
+		for (int i=0; i<9; i++) {
+			for (int j=0; j<9; j++) {
+				item = puzzle[i][j];
+				if(item != 0)
+					setItem(i, j, item);
 			}
 		}
 	}
